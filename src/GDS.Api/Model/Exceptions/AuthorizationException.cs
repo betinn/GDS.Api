@@ -1,4 +1,4 @@
-﻿namespace GDS.Api.Model
+﻿namespace GDS.Api.Model.Exceptions
 {
     public class AuthorizationException : Exception
     {

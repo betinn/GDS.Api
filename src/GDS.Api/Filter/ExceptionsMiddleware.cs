@@ -1,5 +1,4 @@
-﻿
-using GDS.Api.Model;
+﻿using GDS.Api.Model.Exceptions;
 using GDS.Api.Model.Response;
 using GDS.Api.Util;
 

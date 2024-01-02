@@ -3,8 +3,10 @@
     public class ErrorResponse
     {
         public int StatusCode { get; set; }
+        public object? Data { get; set; }
         public string Message { get; set; } = string.Empty;
         public string ExceptionType { get; set; } = string.Empty;
         public Exception? Exception { get; set; } = null;
+
     }
 }

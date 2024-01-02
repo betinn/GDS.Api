@@ -28,6 +28,12 @@ namespace GDS.Api.Filter
                         errorResponse.Message = AuthEx.exMessage;
                         errorResponse.StatusCode = AuthEx.statuscode;
                         break;
+                    case ModelValidationException:
+                        var modelValidationEx = ex as ModelValidationException;
+                        errorResponse.Message = modelValidationEx.Message; 
+                        errorResponse.StatusCode = modelValidationEx.statuscode;
+                        errorResponse.Data = modelValidationEx.errors;
+                        break;
                     default:
                         errorResponse.StatusCode = StatusCodes.Status500InternalServerError;
                         errorResponse.Message = ex.Message;

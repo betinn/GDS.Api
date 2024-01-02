@@ -1,9 +1,13 @@
-﻿namespace GDS.Api.Model.Request
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GDS.Api.Model.Request
 {
     public class CreateTokenRequest
     {
         public Guid ProfileId { get; set; }
-        public string UserName { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        [Required(ErrorMessage = "UserName is required")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage = "UserName is required")]
+        public string Password { get; set; }
     }
 }

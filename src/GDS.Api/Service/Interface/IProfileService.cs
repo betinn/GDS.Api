@@ -1,4 +1,5 @@
-﻿using GDS.Api.Model.Request;
+﻿using GDS.Api.Model;
+using GDS.Api.Model.Request;
 
 namespace GDS.Api.Service.Interface
 {
@@ -6,5 +7,7 @@ namespace GDS.Api.Service.Interface
     {
         List<string> ListProfilesFromBaseDiretory();
         void CreateProfile(CreateProfileRequest request);
+        Profile DecryptProfile(AuthProfileRequest authProfile);
+        Profile CreateBox(Guid idcard, CreateBoxRequest boxRequest);
     }
 }

@@ -39,9 +39,9 @@ namespace GDS.Api.Service
 
             var claims = new List<Claim>()
     {
-        new Claim("name", createTokenRequest.UserName),
+        new Claim("user", createTokenRequest.User),
         new Claim("pass", createTokenRequest.Password),
-        new Claim("profileid", createTokenRequest.ProfileId.ToString())
+        new Claim("profileFileName", createTokenRequest.ProfileFileName)
     };
 
             var date = DateTime.Now.AddMinutes(jwtSection.ExpirationMinutes);
@@ -58,7 +58,7 @@ namespace GDS.Api.Service
             return rawToken;
         }
 
-        public ProfileSettings GetProfileSettings()
+        public ProfileSecrets GetProfileSettings()
         {
             var token = _contextAccessor.HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
 
@@ -73,10 +73,10 @@ namespace GDS.Api.Service
                 ValidateAudience = false
             };
             var claims = handler.ValidateToken(token, validations, out var signingCredentials);
-            return new ProfileSettings() { 
+            return new ProfileSecrets() { 
                 Password = claims.FindFirst("pass").Value, 
-                User = claims.FindFirst("name").Value,
-                ProfileId = Guid.Parse(claims.FindFirst("profileid").Value)
+                User = claims.FindFirst("user").Value,
+                ProfileFileName = claims.FindFirst("profileFileName").Value
             };
         }
     }

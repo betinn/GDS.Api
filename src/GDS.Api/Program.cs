@@ -1,5 +1,7 @@
 ﻿using GDS.Api.Filter;
 using GDS.Api.Model.Configuration;
+using GDS.Api.Repository;
+using GDS.Api.Repository.Interface;
 using GDS.Api.Service;
 using GDS.Api.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

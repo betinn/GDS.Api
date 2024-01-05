@@ -7,6 +7,6 @@ namespace GDS.Api.Service.Interface
     public interface IAuthService
     {
         string CreateAccessToken(CreateTokenRequest authToken);
-        ProfileSettings GetProfileSettings();
+        ProfileSecrets GetProfileSettings();
     }
 }

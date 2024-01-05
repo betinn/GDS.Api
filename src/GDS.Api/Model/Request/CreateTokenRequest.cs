@@ -4,9 +4,10 @@ namespace GDS.Api.Model.Request
 {
     public class CreateTokenRequest
     {
-        public Guid ProfileId { get; set; }
+        [Required]
+        public string ProfileFileName { get; set; }
         [Required(ErrorMessage = "UserName is required")]
-        public string UserName { get; set; }
+        public string User { get; set; }
         [Required(ErrorMessage = "UserName is required")]
         public string Password { get; set; }
     }

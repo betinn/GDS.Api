@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using GDS.Api.Model.Exceptions;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace GDS.Api.Util
@@ -42,37 +43,41 @@ namespace GDS.Api.Util
 
         public static string DecryptStringFromBytes_Aes(byte[] cipherText, string user, string pass)
         {
-            byte[] Key = Encoding.ASCII.GetBytes(user + pass);
-            byte[] IV = Encoding.ASCII.GetBytes(pass + user);
-            if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException("cipherText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
-
-            string plaintext = null;
-
-            using (Aes aesAlg = Aes.Create())
+            try
             {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
+                byte[] Key = Encoding.ASCII.GetBytes(user + pass);
+                byte[] IV = Encoding.ASCII.GetBytes(pass + user);
+                if (cipherText == null || cipherText.Length <= 0)
+                    throw new ArgumentNullException("cipherText");
+                if (Key == null || Key.Length <= 0)
+                    throw new ArgumentNullException("Key");
+                if (IV == null || IV.Length <= 0)
+                    throw new ArgumentNullException("IV");
 
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                string plaintext = null;
 
-                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                using (Aes aesAlg = Aes.Create())
                 {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    aesAlg.Key = Key;
+                    aesAlg.IV = IV;
+
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                    using (MemoryStream msDecrypt = new MemoryStream(cipherText))
                     {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                         {
-                            plaintext = srDecrypt.ReadToEnd();
+                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                plaintext = srDecrypt.ReadToEnd();
+                            }
                         }
                     }
                 }
-            }
 
-            return plaintext;
+                return plaintext;
+            }
+            catch { throw new AuthorizationException(); }
         }
     }
 }

@@ -22,7 +22,12 @@ namespace GDS.Api.Filter
                 ErrorResponse errorResponse = new ErrorResponse();
                 switch (ex)
                 {
-                    
+                    case CardNotFoundException:
+                        var cardEx = ex as CardNotFoundException;
+                        errorResponse.Message = cardEx.exMessage;
+                        errorResponse.StatusCode = cardEx.statuscode;
+                        errorResponse.Data = new { CardId = cardEx.id };
+                        break;
                     case AuthorizationException:
                         var AuthEx = ex as AuthorizationException;
                         errorResponse.Message = AuthEx.exMessage;

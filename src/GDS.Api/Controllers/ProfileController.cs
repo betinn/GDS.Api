@@ -18,9 +18,10 @@ namespace GDS.Api.Controllers
             else return NoContent();
         }
         [HttpPost("create")]
-        public IActionResult CreateProfile([FromBody] CreateProfileRequest createProfile)
+        public IActionResult CreateProfile([FromBody] CreateProfileRequest request)
         {
-            return Ok();
+            _profileService.CreateProfile(request);
+            return NoContent();
         }
     }
 }

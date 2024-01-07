@@ -41,7 +41,7 @@ namespace GDS.Api.Controllers
         [HttpGet("Check")]
         public IActionResult CheckAuthentication()
         {
-            return Ok(_authService.GetProfileSettings());
+            return Ok(_authService.GetProfileSecrets());
         }
 
         [HttpPost("CreateToken")]

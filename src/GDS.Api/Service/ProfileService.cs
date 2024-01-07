@@ -1,6 +1,7 @@
 ﻿using GDS.Api.Model;
 using GDS.Api.Model.Exceptions;
 using GDS.Api.Model.Request;
+using GDS.Api.Model.Response;
 using GDS.Api.Repository.Interface;
 using GDS.Api.Service.Interface;
 using GDS.Api.Util;
@@ -15,9 +16,18 @@ namespace GDS.Api.Service
         private readonly IAuthService _authService = authService;
         private readonly IProfileRepository _profileRepository = profileRepository;
         private readonly string _extension = ".gdsprofile";
-        public List<string> ListProfilesFromBaseDiretory()
+        public List<ListProfilesResponse> ListProfilesFromBaseDiretory()
         {
-            return Directory.GetFiles(_profileRepository.GetBaseDiretoryFromAppConfig()).ToList();
+            var files = Directory.GetFiles(_profileRepository.GetBaseDiretoryFromAppConfig()).ToList();
+            var response = new List<ListProfilesResponse>();
+            foreach (var file in files)
+            {
+                FileInfo fileInfo = new FileInfo(file);
+                var profile = JsonConvert.DeserializeObject<ProfileEncrypted>(File.ReadAllText(file));
+                response.Add(new ListProfilesResponse() { FileName = fileInfo.Name, Name = profile.Name, Img = profile.ImgBase64 });
+            }
+
+            return response;
         }
 
         public void CreateProfile(CreateProfileRequest request)
@@ -66,8 +76,7 @@ namespace GDS.Api.Service
             if( !Directory.Exists(baseDir) ) {  Directory.CreateDirectory(baseDir); }
 
             var fileToCreate = Path.Combine(baseDir,
-                string.Format("{0}_{1}{2}", 
-                profileEncrypted.Name, 
+                string.Format("{0}{1}", 
                 Guid.NewGuid(), 
                 _extension));
 
@@ -107,14 +116,29 @@ namespace GDS.Api.Service
             return profileDecrypt;
 
         }
-        public Profile CreateBox(Guid idcard, CreateBoxRequest boxRequest)
-        {
-            return _profileRepository.AddBox(idcard, boxRequest);
 
+        public Profile Update(UpdateProfileRequest updateProfileRequest)
+        {
+            var profileSecrets = _authService.GetProfileSecrets();
+            var profile = _profileRepository.GetDecryptedProfile(profileSecrets);
+
+
+            profile.Name = updateProfileRequest.Name;
+            if(profile.ImgBase64 != null)
+            {
+                profile.ImgBase64 = profile.ImgBase64;
+            }
+
+            _profileRepository.SaveProfile(profile, profileSecrets);
+
+
+            return profile;
         }
 
         
+
         #region private methods
+
 
 
         #endregion

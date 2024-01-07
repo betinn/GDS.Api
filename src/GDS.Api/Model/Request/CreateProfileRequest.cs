@@ -13,6 +13,6 @@ namespace GDS.Api.Model.Request
         [Required(ErrorMessage = "Propriedade 'Password' é obrigatória")]
         [Length(8, 8, ErrorMessage = "Propriedade 'Password' deve possuir 8 caracteres")]
         public string Password { get; set; } = string.Empty;
-        public byte[]? Img { get; set; } 
+        public string? ImgBase64 { get; set; } 
     }
 }

@@ -5,7 +5,9 @@ namespace GDS.Api.Repository.Interface
 {
     public interface IProfileRepository
     {
-        public Profile AddBox(Guid idcard, CreateBoxRequest boxRequest);
+        void SaveProfile(Profile profile, ProfileSecrets profileSecrets);
         string GetBaseDiretoryFromAppConfig();
+        Profile GetDecryptedProfile(ProfileSecrets profileSecrets);
+        void Delete(string oldFileName);
     }
 }

@@ -8,33 +8,11 @@ using Newtonsoft.Json;
 
 namespace GDS.Api.Repository
 {
-    public class ProfileRepository(IAuthService authService) : IProfileRepository
+    public class ProfileRepository(IAuthService authService) : BaseRepository, IProfileRepository
     {
-        private readonly IAuthService _authService = authService;
+        
 
-        public Profile AddBox(Guid idcard, CreateBoxRequest boxRequest)
-        {
-            var profileSecrets = _authService.GetProfileSettings();
-            var profile = GetDecryptedProfile(profileSecrets);
-
-            var card = profile.Cards.Find(x => x.Id == idcard);
-            if (card == null)
-                throw new CardNotFoundException(idcard);
-
-            card.Boxes.Add(
-                new Box(
-                    Guid.NewGuid(),
-                    boxRequest.Name,
-                    boxRequest.IsSecret,
-                    boxRequest.Data
-                ));
-
-            SaveProfile(profile, profileSecrets);
-
-            return profile;
-        }
-
-        private void SaveProfile(Profile profile, ProfileSecrets profileSecrets)
+        public void SaveProfile(Profile profile, ProfileSecrets profileSecrets)
         {
             profile.LastChanged = DateTime.Now;
             ProfileEncrypted profileEncrypted =
@@ -98,17 +76,13 @@ namespace GDS.Api.Repository
 
         }
 
-        public string GetBaseDiretoryFromAppConfig()
+
+        public void Delete(string fileName)
         {
-            var keys = System.Configuration.ConfigurationManager.AppSettings.AllKeys;
-            if (string.IsNullOrEmpty(keys.FirstOrDefault(x => x == "DirectoryProfilePath")))
-                throw new ArgumentNullException("DirectoryProfilePath", "Key não encontrada no .config");
-            var dirpath = System.Configuration.ConfigurationManager.AppSettings[keys.FirstOrDefault(x => x == "DirectoryProfilePath")];
-            if (!Directory.Exists(dirpath))
-                throw new ArgumentException("Diretorio indicado no .config não existe", dirpath);
-
-            return dirpath;
+            //TODO: Colocar logica de backup files
+            fileName = Path.Combine(GetBaseDiretoryFromAppConfig(), fileName);
+            if(File.Exists(fileName))
+            { File.Delete(fileName); }
         }
-
     }
 }

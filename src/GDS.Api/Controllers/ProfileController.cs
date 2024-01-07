@@ -26,11 +26,12 @@ namespace GDS.Api.Controllers
             return NoContent();
         }
         [Authorize]
-        [HttpPost("createbox/{idcard}")]
-        public IActionResult CreateBox(Guid idcard, [FromBody] CreateBoxRequest boxRequest)
+        [HttpPut("update")]
+        public IActionResult Update([FromBody] UpdateProfileRequest updateProfileRequest)
         {
-            Profile profile = _profileService.CreateBox(idcard, boxRequest);
+            Profile profile = _profileService.Update(updateProfileRequest);
             return Ok(profile);
         }
+        
     }
 }

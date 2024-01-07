@@ -58,7 +58,7 @@ namespace GDS.Api.Service
             return rawToken;
         }
 
-        public ProfileSecrets GetProfileSettings()
+        public ProfileSecrets GetProfileSecrets()
         {
             var token = _contextAccessor.HttpContext.Request.Headers["Authorization"][0].Split(" ")[1];
 

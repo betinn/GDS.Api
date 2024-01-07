@@ -15,5 +15,15 @@ namespace GDS.Api.Controllers
         {
             return Ok(_cardService.Create(cardRequest));
         }
+        [HttpPut("update/{idCard}")]
+        public IActionResult Update(Guid idCard, [FromBody] UpdateCardRequest updateCardRequest)
+        {
+            return Ok(_cardService.Update(idCard, updateCardRequest));
+        }
+        [HttpDelete("delete/{idCard}")]
+        public IActionResult Delete(Guid idCard)
+        {
+            return Ok(_cardService.Delete(idCard));
+        }
     }
 }

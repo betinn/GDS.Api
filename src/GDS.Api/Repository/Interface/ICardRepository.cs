@@ -6,5 +6,7 @@ namespace GDS.Api.Repository.Interface
     public interface ICardRepository
     {
         void Create(CreateCardRequest cardRequest, Profile profile);
+        void Delete(Guid idCard, Profile profile);
+        void Update(Guid idCard, UpdateCardRequest updateCardRequest, Profile profile);
     }
 }

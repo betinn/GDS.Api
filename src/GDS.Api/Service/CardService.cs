@@ -27,5 +27,27 @@ namespace GDS.Api.Service
             return profile;
 
         }
+
+        public Profile Delete(Guid idCard)
+        {
+            var profileSecrets = GetProfileSecrets();
+            var profile = _profileRepository.GetDecryptedProfile(profileSecrets);
+
+            _cardRepository.Delete(idCard, profile);
+
+            _profileRepository.SaveProfile(profile, profileSecrets);
+            return profile;
+        }
+
+        public Profile Update(Guid idCard, UpdateCardRequest updateCardRequest)
+        {
+            var profileSecrets = GetProfileSecrets();
+            var profile = _profileRepository.GetDecryptedProfile(profileSecrets);
+
+            _cardRepository.Update(idCard, updateCardRequest, profile);
+
+            _profileRepository.SaveProfile(profile, profileSecrets);
+            return profile;
+        }
     }
 }

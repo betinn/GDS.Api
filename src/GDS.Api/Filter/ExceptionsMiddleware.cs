@@ -22,11 +22,28 @@ namespace GDS.Api.Filter
                 ErrorResponse errorResponse = new ErrorResponse();
                 switch (ex)
                 {
-                    
+                    case BoxNotFoundException:
+                        var BoxEx = ex as BoxNotFoundException;
+                        errorResponse.Message = BoxEx.exMessage;
+                        errorResponse.StatusCode = BoxEx.statuscode;
+                        errorResponse.Data = new { CardId = BoxEx.idCard, BoxId = BoxEx.idBox };
+                        break;
+                    case CardNotFoundException:
+                        var cardEx = ex as CardNotFoundException;
+                        errorResponse.Message = cardEx.exMessage;
+                        errorResponse.StatusCode = cardEx.statuscode;
+                        errorResponse.Data = new { CardId = cardEx.id };
+                        break;
                     case AuthorizationException:
                         var AuthEx = ex as AuthorizationException;
                         errorResponse.Message = AuthEx.exMessage;
                         errorResponse.StatusCode = AuthEx.statuscode;
+                        break;
+                    case ModelValidationException:
+                        var modelValidationEx = ex as ModelValidationException;
+                        errorResponse.Message = modelValidationEx.Message; 
+                        errorResponse.StatusCode = modelValidationEx.statuscode;
+                        errorResponse.Data = modelValidationEx.errors;
                         break;
                     default:
                         errorResponse.StatusCode = StatusCodes.Status500InternalServerError;

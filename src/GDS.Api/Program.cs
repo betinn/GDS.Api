@@ -1,5 +1,7 @@
 ﻿using GDS.Api.Filter;
 using GDS.Api.Model.Configuration;
+using GDS.Api.Repository;
+using GDS.Api.Repository.Interface;
 using GDS.Api.Service;
 using GDS.Api.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IBoxService, BoxService>();
+builder.Services.AddScoped<ICardService, CardService>();
+
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<IBoxRepository, BoxRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -85,8 +94,6 @@ app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-
 
 app.MapControllers();
 app.UseHttpsRedirection();

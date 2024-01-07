@@ -1,9 +1,8 @@
 ﻿namespace GDS.Api.Model
 {
-    public class ProfileSettings
+    public class ProfileSecrets
     {
-        public string ProfileName { get; set; }
-        public Guid ProfileId { get; set; }
+        public string ProfileFileName { get; set; }
         public string User {  get; set; }
         public string Password { get; set; }
 

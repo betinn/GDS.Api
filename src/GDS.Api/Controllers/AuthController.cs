@@ -6,30 +6,42 @@ using GDS.Api.Service.Interface;
 using GDS.Api.Model.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using GDS.Api.Util;
+using System.ComponentModel.DataAnnotations;
+using GDS.Api.Model;
 
 namespace GDS.Api.Controllers
 {
+    [ModelValidation]
     [Route("Auth")]
-    public class AuthController : Controller
+    public class AuthController(IAuthService authService,
+        IServiceProvider serviceProvider,
+        IProfileService profileService) : Controller
     {
-        private readonly IAuthService _authService;
-        private readonly IServiceProvider _IServiceProvider;
-        public AuthController(IAuthService authService, IServiceProvider serviceProvider)
-        {
-            _authService = authService;
-            _IServiceProvider = serviceProvider;
-        }
+        private readonly IAuthService _authService = authService;
+        private readonly IServiceProvider _IServiceProvider = serviceProvider;
+        private readonly IProfileService _profileService = profileService;
+        
+        
 
-        [HttpGet("{ProfileId}")]
-        public IActionResult AuthProfile(Guid ProfileId)
+        [HttpPost()]
+        public IActionResult AuthProfile([FromBody] AuthProfileRequest authProfile)
         {
-            return Ok();
+            Profile profile = _profileService.DecryptProfile(authProfile);
+            profile.FileName = authProfile.ProfileFilePath;
+            var token = _authService.CreateAccessToken(
+                new CreateTokenRequest()
+                {
+                    Password = authProfile.Password,
+                    User = authProfile.User,
+                    ProfileFileName = authProfile.ProfileFilePath
+                });
+            return Ok(new { access_token = token, profile });
         }
         [Authorize]
         [HttpGet("Check")]
         public IActionResult CheckAuthentication()
         {
-            return Ok(_authService.GetProfileSettings());
+            return Ok(_authService.GetProfileSecrets());
         }
 
         [HttpPost("CreateToken")]

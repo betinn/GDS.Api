@@ -11,9 +11,13 @@ using System.Text;
 
 namespace GDS.Api.Service
 {
-    public class ProfileService(IAuthService authService, IProfileRepository profileRepository) : IProfileService
+    public class ProfileService(
+        IProfileRepository profileRepository,
+        IHttpContextAccessor contextAccessor,
+        IServiceProvider serviceProvider) : 
+        BaseService(contextAccessor, serviceProvider), 
+        IProfileService
     {
-        private readonly IAuthService _authService = authService;
         private readonly IProfileRepository _profileRepository = profileRepository;
         private readonly string _extension = ".gdsprofile";
         public List<ListProfilesResponse> ListProfilesFromBaseDiretory()
@@ -119,7 +123,7 @@ namespace GDS.Api.Service
 
         public Profile Update(UpdateProfileRequest updateProfileRequest)
         {
-            var profileSecrets = _authService.GetProfileSecrets();
+            var profileSecrets = GetProfileSecrets();
             var profile = _profileRepository.GetDecryptedProfile(profileSecrets);
 
 

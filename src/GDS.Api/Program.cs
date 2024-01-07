@@ -20,9 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IBoxService, BoxService>();
+builder.Services.AddScoped<ICardService, CardService>();
 
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

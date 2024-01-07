@@ -1,28 +1,31 @@
-﻿using GDS.Api.Model.Request;
-using GDS.Api.Model;
-using GDS.Api.Service.Interface;
+﻿using GDS.Api.Model;
+using GDS.Api.Model.Request;
 using GDS.Api.Repository.Interface;
+using GDS.Api.Service.Interface;
 
 namespace GDS.Api.Service
 {
-    public class BoxService(IBoxRepository boxRepository, 
+    public class CardService(ICardRepository cardRepository,
         IProfileRepository profileRepository,
         IHttpContextAccessor contextAccessor,
         IServiceProvider serviceProvider) : 
-        BaseService(contextAccessor, serviceProvider), IBoxService
+        BaseService(contextAccessor, serviceProvider),
+        ICardService
     {
-        private readonly IBoxRepository _boxRepository = boxRepository;
         private readonly IProfileRepository _profileRepository = profileRepository;
-        public Profile Create(Guid idcard, CreateBoxRequest boxRequest)
+        private readonly ICardRepository _cardRepository = cardRepository;
+
+        public Profile Create(CreateCardRequest cardRequest)
         {
             var profileSecrets = GetProfileSecrets();
             var profile = _profileRepository.GetDecryptedProfile(profileSecrets);
 
-            _boxRepository.AddBox(idcard, boxRequest, profile);
+            _cardRepository.Create(cardRequest, profile);
 
             _profileRepository.SaveProfile(profile, profileSecrets);
 
             return profile;
+
         }
     }
 }

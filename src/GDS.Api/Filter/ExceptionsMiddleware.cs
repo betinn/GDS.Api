@@ -22,6 +22,12 @@ namespace GDS.Api.Filter
                 ErrorResponse errorResponse = new ErrorResponse();
                 switch (ex)
                 {
+                    case BoxNotFoundException:
+                        var BoxEx = ex as BoxNotFoundException;
+                        errorResponse.Message = BoxEx.exMessage;
+                        errorResponse.StatusCode = BoxEx.statuscode;
+                        errorResponse.Data = new { CardId = BoxEx.idCard, BoxId = BoxEx.idBox };
+                        break;
                     case CardNotFoundException:
                         var cardEx = ex as CardNotFoundException;
                         errorResponse.Message = cardEx.exMessage;
